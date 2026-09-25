@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JFI, alive · orb mock-up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#222326;--ink2:rgba(31,32,37,.6);--ink3:rgba(31,32,37,.38);--card:#EBF0F8;--canvas:#F5F7FB;--dark:#1F2025;--violet:#8c7cf6;--vdeep:#4d3ac4;--ease:cubic-bezier(.2,.7,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:Inter,system-ui,sans-serif;font-weight:500;color:var(--ink);background:#fff;overflow-x:hidden}
+.wrap{max-width:1380px;margin:0 auto;padding:0 30px}
+h1,h2,h3{font-weight:600;letter-spacing:-.03em;line-height:1}
+h1{font-size:80px}h2{font-size:64px}h3{font-size:24px;letter-spacing:-.02em;line-height:1.15}
+.sub{font-size:24px;line-height:1.3;color:var(--ink2);letter-spacing:-.01em}
+section{padding:140px 0}
+.reveal{opacity:0;transform:translateY(28px);filter:blur(8px);transition:opacity 1s var(--ease),transform 1s var(--ease),filter 1s var(--ease)}
+.reveal.in{opacity:1;transform:none;filter:none}
+
+/* hero */
+.hero{padding:120px 0 80px;text-align:center}
+.hero h1 span{display:block}
+.hero .sub{margin:22px auto 0;max-width:620px}
+.stage{position:relative;height:380px;margin:30px auto 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:860px;margin:0 auto}
+.chip{border:0;font:600 15px Inter;padding:10px 18px;border-radius:128px;background:#F1F3F7;color:var(--ink);cursor:pointer;transition:transform .3s var(--ease),background .2s}
+.chip:hover{transform:scale(1.04)}.chip.on{background:var(--dark);color:#EBF0F8}
+.hint{margin-top:16px;font-size:14px;color:var(--ink3)}
+
+/* demo */
+.demo{background:var(--card);border-radius:24px;padding:80px 60px;display:grid;grid-template-columns:1fr 430px;gap:60px;align-items:center}
+.demo h2{font-size:56px}
+.demo .sub{margin-top:18px;font-size:20px;max-width:520px}
+.chapters{margin-top:34px;display:grid;gap:4px;max-width:520px}
+.chap{display:flex;align-items:center;gap:14px;border:0;background:transparent;text-align:left;font:600 17px Inter;color:var(--ink3);padding:10px 14px;border-radius:16px;cursor:pointer;transition:background .25s,color .25s}
+.chap i{font-style:normal;width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font-size:12px;background:rgba(31,32,37,.06);color:var(--ink3);flex:none;transition:background .25s,color .25s}
+.chap:hover{color:var(--ink2)}
+.chap.on{background:#fff;color:var(--ink);box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.chap.on i{background:rgba(140,124,246,.16);color:var(--vdeep)}
+.chap small{display:block;font:500 14px Inter;color:var(--ink2);margin-top:2px}
+.chap:not(.on) small{display:none}
+.ctl{margin-top:22px;display:flex;gap:8px}
+.btn{border:0;font:600 16px Inter;padding:12px 20px;border-radius:128px;background:var(--dark);color:#EBF0F8;cursor:pointer;transition:transform .3s var(--ease)}
+.btn:hover{transform:scale(1.04)}.btn.ghost{background:#fff;color:var(--ink)}
+
+/* phone */
+.phoneWrap{width:430px;height:900px;position:relative}
+.phone{position:absolute;left:0;top:0;width:410px;height:864px;border-radius:58px;background:#111216;padding:10px;box-shadow:0 40px 80px -30px rgba(30,40,70,.5)}
+.screen{position:relative;width:390px;height:844px;border-radius:48px;overflow:hidden;background:var(--canvas)}
+.island{position:absolute;left:50%;top:11px;width:122px;height:35px;border-radius:20px;background:#000;transform:translateX(-50%);z-index:60}
+.status{position:absolute;left:0;right:0;top:0;height:54px;display:flex;justify-content:space-between;align-items:center;padding:6px 34px 0 42px;font:600 16px Inter;z-index:59;color:#111}
+.view{position:absolute;inset:0;transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.view.hidden{opacity:0;transform:scale(.985);pointer-events:none}
+.scroller{position:absolute;inset:0;padding:64px 16px 130px;transition:transform .9s var(--ease)}
+.home{background:linear-gradient(180deg,#dfe8f7 0,#f5f7fb 300px)}
+.train{background:linear-gradient(180deg,#fde7cf 0,#f5f7fb 300px)}
+.cap{font-size:14px;color:var(--ink2);margin:10px 4px 2px}
+.ttl{font-size:30px;font-weight:700;letter-spacing:-.03em;margin:0 4px 16px}
+.tile{background:#fff;border-radius:24px;padding:18px;margin-bottom:8px;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.rings{display:flex;align-items:center;gap:18px}
+.rings svg{flex:none}
+.rl{display:grid;gap:8px}.rl b{display:block;font-size:24px;font-weight:700;letter-spacing:-.02em;line-height:1}.rl span{font-size:13px;color:var(--ink2)}
+.hab{display:flex;align-items:center;gap:12px;padding:10px 0}
+.hab+.hab{border-top:1px solid #ECEEF2}
+.ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none}
+.hab p{flex:1;font-size:16px;font-weight:600;letter-spacing:-.01em}.hab p small{display:block;font-size:13px;font-weight:500;color:var(--ink2)}
+.chk{width:30px;height:30px;border-radius:50%;border:2px solid #d6dbe4;display:grid;place-items:center;transition:all .35s var(--ease)}
+.chk svg{opacity:0;transform:scale(.4);transition:all .35s var(--ease)}
+.chk.on{border-color:transparent;background:var(--c)}.chk.on svg{opacity:1;transform:none}
+.wo{background:linear-gradient(135deg,#fff3e3,#ffe2c2);border-radius:24px;padding:20px;position:relative;overflow:hidden}
+.wo .k{font-size:14px;font-weight:600;color:#b86b00}.wo h4{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:4px 0}.wo p{font-size:14px;color:var(--ink2)}
+.pill{display:inline-block;margin-top:14px;padding:10px 18px;border-radius:128px;background:rgba(245,165,36,.2);color:#9a5700;font-weight:650;font-size:15px}
+.ex{display:flex;justify-content:space-between;padding:13px 2px;font-size:16px;font-weight:600}.ex+.ex{border-top:1px solid #ECEEF2}.ex span{color:var(--ink2);font-weight:500}
+.tabbar{position:absolute;left:14px;right:84px;bottom:22px;height:64px;border-radius:32px;background:rgba(255,255,255,.72);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 16px 40px -18px rgba(30,40,70,.35);display:flex;align-items:center;justify-content:space-around;z-index:20}
+.tab{display:grid;justify-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--ink3)}.tab.on{color:var(--ink)}
+.dock{position:absolute;right:14px;bottom:22px;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.72);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 16px 40px -18px rgba(30,40,70,.35);z-index:20}
+.toast{position:absolute;left:50%;top:70px;transform:translate(-50%,-20px);opacity:0;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);padding:12px 18px;border-radius:128px;font-weight:600;font-size:15px;box-shadow:0 16px 40px -18px rgba(30,40,70,.35);transition:all .5s var(--ease);z-index:40;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+/* chat */
+.chat{position:absolute;inset:0;z-index:30;background:radial-gradient(60% 30% at 12% 3%,rgba(255,255,255,.8),transparent 70%),linear-gradient(180deg,#e2dcfb 0,#ece8fb 150px,#f1f0fa 300px,#f5f7fb 460px);clip-path:circle(0 at 350px 792px);visibility:hidden}
+.chat.open{visibility:visible;clip-path:circle(160% at 350px 792px)}
+.chead{position:absolute;top:58px;left:16px;right:16px;display:flex;align-items:center;gap:10px;height:48px}
+.chead .slot{width:44px;height:44px;flex:none}
+.chead b{font-size:17px;font-weight:600}.beta{font-size:12px;font-weight:600;color:#5b47d6;background:rgba(140,124,246,.16);padding:4px 8px;border-radius:128px}
+.x{margin-left:auto;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.85);display:grid;place-items:center;box-shadow:0 6px 16px -10px rgba(30,40,70,.35)}
+.msgs{position:absolute;left:16px;right:16px;top:120px;bottom:104px;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;overflow:hidden}
+.m{max-width:82%;padding:12px 16px;font-size:16px;line-height:1.42;border-radius:22px;animation:mIn .6s var(--ease) both}
+.m.them{background:#fff;border-bottom-left-radius:8px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 14px 30px -24px rgba(30,40,70,.35)}
+.m.me{align-self:flex-end;background:linear-gradient(180deg,#efecfe,#e4defd);color:#3d2cae;font-weight:550;border-bottom-right-radius:8px}
+.opt{align-self:flex-start;border:1.5px solid rgba(140,124,246,.5);color:#4d3ac4;font-weight:600;font-size:14.5px;padding:9px 16px;border-radius:128px;background:rgba(255,255,255,.5);animation:mIn .6s var(--ease) both}
+.dots{display:flex;gap:5px;padding:16px 18px}.dots i{width:7px;height:7px;border-radius:50%;background:#8c7cf6;animation:dot 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,80%,100%{opacity:.3;transform:none}40%{opacity:1;transform:translateY(-3px)}}
+@keyframes mIn{from{opacity:0;transform:translateY(14px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.comp{position:absolute;left:16px;right:16px;bottom:30px;height:56px;border-radius:128px;background:rgba(255,255,255,.88);box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 20px 44px -18px rgba(30,40,70,.42);display:flex;align-items:center;padding:0 7px 0 20px;gap:8px}
+.field{flex:1;font-size:16px;color:var(--ink3);white-space:nowrap;overflow:hidden}.field.typed{color:var(--ink)}
+.caret{display:inline-block;width:2px;height:19px;background:#8c7cf6;vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.talk{height:42px;padding:0 16px;border-radius:128px;background:linear-gradient(180deg,#eeebfe,#e2dcfd);color:#4d3ac4;font-weight:650;font-size:14.5px;display:flex;align-items:center;gap:6px}
+.voicecap{position:absolute;left:30px;right:30px;top:250px;text-align:center;font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.25;color:var(--ink);min-height:100px}
+.voicecap span{animation:mIn .5s var(--ease) both;display:inline-block;margin:0 .14em}
+.voicehint{position:absolute;left:0;right:0;bottom:150px;text-align:center;font-size:14px;color:var(--ink2);opacity:0;transition:opacity .4s}
+.voiceon .voicehint{opacity:1}
+.voiceon .msgs,.voiceon .comp{opacity:0;transition:opacity .35s}
+.msgs,.comp{transition:opacity .35s}
+.finger{position:absolute;left:0;top:0;width:44px;height:44px;margin:-22px;border-radius:50%;background:rgba(31,32,37,.14);border:2px solid rgba(255,255,255,.9);box-shadow:0 6px 18px rgba(30,40,70,.25);z-index:80;opacity:0;transition:opacity .3s;pointer-events:none}
+.finger.on{opacity:1}
+.finger.tap{animation:tap .35s var(--ease)}
+@keyframes tap{50%{transform:scale(.72);background:rgba(140,124,246,.35)}}
+.orbLayer{position:absolute;inset:0;z-index:50;pointer-events:none}
+.caption{position:absolute;left:0;right:0;bottom:-6px;text-align:center;font-size:15px;color:var(--ink2);font-weight:600}
+
+/* dark moods */
+.dark{background:var(--dark);color:#fff;border-radius:24px;padding:100px 60px;text-align:center}
+.dark h2{color:#fff}.dark .sub{color:rgba(255,255,255,.55);margin:18px auto 0;max-width:600px}
+.moods{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:60px}
+.mood{background:rgba(255,255,255,.05);border-radius:24px;height:190px;position:relative;cursor:pointer;transition:background .3s}
+.mood:hover{background:rgba(255,255,255,.09)}
+.mood span{position:absolute;left:0;right:0;bottom:18px;font-size:15px;font-weight:600;color:rgba(255,255,255,.75)}
+.mood small{position:absolute;left:0;right:0;bottom:-2px;font-size:12px;color:rgba(255,255,255,.4)}
+
+/* features */
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:60px}
+.feat{background:var(--card);border-radius:24px;padding:30px;min-height:240px;position:relative;overflow:hidden}
+.feat h3{margin-top:90px}.feat p{margin-top:10px;font-size:17px;line-height:1.4;color:var(--ink2)}
+.feat .fo{position:absolute;left:30px;top:30px;width:64px;height:64px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:60px}
+.cmpc{background:var(--card);border-radius:24px;padding:40px;display:flex;gap:26px;align-items:center;min-height:420px}
+.cmpc img{width:190px;border-radius:26px;box-shadow:0 16px 40px -18px rgba(30,40,70,.35)}
+.cmpc h3{font-size:32px}.cmpc p{margin-top:12px;font-size:17px;line-height:1.45;color:var(--ink2)}
+.newStage{width:190px;height:300px;position:relative;flex:none;border-radius:26px;background:linear-gradient(180deg,#e2dcfb,#f5f7fb);box-shadow:0 16px 40px -18px rgba(30,40,70,.35)}
+.center{text-align:center}
+footer{padding:60px 0 90px;text-align:center;color:var(--ink3);font-size:14px}
+@media (max-width:1100px){
+  h1{font-size:46px}h2,.demo h2{font-size:40px}.sub{font-size:19px}
+  section{padding:90px 0}.wrap{padding:0 16px}
+  .demo{grid-template-columns:1fr;padding:40px 20px;justify-items:center}.chapters{max-width:none}
+  .phoneWrap{transform:scale(.8);transform-origin:top center;height:720px}
+  .feats,.cmp{grid-template-columns:1fr}.cmpc{flex-direction:column;align-items:flex-start}
+  .dark{padding:60px 20px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section class="hero">
+  <h1 class="reveal"><span>JFI, but</span><span>actually alive.</span></h1>
+  <p class="sub reveal">Same little face. Now it watches what's happening, feels the moment and moves with you.</p>
+  <div class="stage" id="heroStage"></div>
+  <div class="chips" id="heroChips"></div>
+  <p class="hint">Move your mouse. Tap the orb.</p>
+</section>
+
+<section style="padding-top:40px">
+  <div class="demo">
+    <div>
+      <h2 class="reveal">Watch it<br>live in the app.</h2>
+      <p class="sub reveal">A minute in JF Coach with sample data. Tap any moment to jump to it.</p>
+      <div class="chapters" id="chapters"></div>
+      <div class="ctl"><button class="btn" id="play">Pause</button><button class="btn ghost" id="restart">Restart</button></div>
+    </div>
+    <div class="phoneWrap">
+      <div class="phone"><div class="screen" id="screen">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+
+        <div class="view home" id="vHome"><div class="scroller" id="homeScroll">
+          <p class="cap">Friday 26 September</p>
+          <h1 class="ttl">Good evening, Sofia</h1>
+          <div class="tile rings" id="rings">
+            <svg width="118" height="118" viewBox="0 0 118 118">
+              <circle cx="59" cy="59" r="52" fill="none" stroke="#fdebd0" stroke-width="11"/><circle cx="59" cy="59" r="52" fill="none" stroke="#F5A524" stroke-width="11" stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="92" transform="rotate(-90 59 59)"/>
+              <circle cx="59" cy="59" r="37" fill="none" stroke="#e6f6d2" stroke-width="11"/><circle cx="59" cy="59" r="37" fill="none" stroke="#8BD42A" stroke-width="11" stroke-linecap="round" stroke-dasharray="232" stroke-dashoffset="58" transform="rotate(-90 59 59)"/>
+              <circle cx="59" cy="59" r="22" fill="none" stroke="#ebe7fe" stroke-width="11"/><circle cx="59" cy="59" r="22" fill="none" stroke="#8C7CF6" stroke-width="11" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="50" transform="rotate(-90 59 59)"/>
+            </svg>
+            <div class="rl"><div><b>7,240</b><span>steps of 10,000</span></div><div><b>3 of 4</b><span>workouts this week</span></div><div><b>1,640</b><span>calories logged</span></div></div>
+          </div>
+          <div class="tile">
+            <div class="hab" id="habWater"><div class="ic" style="background:rgba(77,163,255,.14)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2f8ae8" stroke-width="2.2" stroke-linecap="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></div><p>Drink 2 L of water<small>Daily habit</small></p><div class="chk" style="--c:#4DA3FF"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div></div>
+            <div class="hab" id="habSteps"><div class="ic" style="background:rgba(245,165,36,.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d88a0c" stroke-width="2.2" stroke-linecap="round"><path d="M8 20c-2 0-3-2-3-4s1-5 3-5 2 3 2 5-0 4-2 4zM16 13c-2 0-2-3-2-5s1-4 3-4 3 3 3 5-2 4-4 4z"/></svg></div><p>10,000 steps<small>7,240 so far</small></p><div class="chk on" style="--c:#F5A524"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div></div>
+            <div class="hab" id="habMeals"><div class="ic" style="background:rgba(126,211,33,.16)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3d8a10" stroke-width="2.2" stroke-linecap="round"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 0-3 3-3 6s1 4 3 4v8"/></svg></div><p>Log all meals<small>Secret challenge</small></p><div class="chk" style="--c:#8BD42A"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div></div>
+          </div>
+          <div class="wo"><div class="k">Today</div><h4>Lower 4</h4><p>45 min · 6 exercises</p><span class="pill">Start session</span></div>
+          <div class="tile" style="margin-top:8px"><p class="cap" style="margin:0 0 6px">This week</p><div class="ex">Sessions with Gabrielle<span>Tue 7:00</span></div><div class="ex">Weekly check-in<span>Sun</span></div></div>
+        </div></div>
+
+        <div class="view train hidden" id="vTrain"><div class="scroller">
+          <p class="cap">Week 3 of 6</p>
+          <h1 class="ttl">Training</h1>
+          <div class="wo" id="woCard"><div class="k">Today</div><h4>Lower 4</h4><p>45 min · 6 exercises</p><span class="pill">Start session</span></div>
+          <div class="tile" style="margin-top:8px" id="exList">
+            <div class="ex">Goblet squat<span>3 × 10</span></div><div class="ex">Romanian deadlift<span>3 × 8</span></div><div class="ex" id="exLunge">Walking lunges<span>3 × 12</span></div><div class="ex">Hip thrust<span>3 × 10</span></div><div class="ex">Calf raise<span>3 × 15</span></div>
+          </div>
+        </div></div>
+
+        <div class="toast" id="toast">All three habits done today</div>
+
+        <div class="tabbar"><div class="tab on" id="tHome"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>Home</div><div class="tab" id="tTrain"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></svg>Training</div><div class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/></svg>Challenge</div></div>
+        <div class="dock"></div>
+
+        <div class="chat" id="chat">
+          <div class="chead"><div class="slot"></div><b>JFI</b><span class="beta">Beta</span><div class="x"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1d1e22" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div></div>
+          <div class="msgs" id="msgs"></div>
+          <div class="voicecap" id="vcap"></div>
+          <div class="voicehint">Tap JFI to end</div>
+          <div class="comp"><div class="field" id="field">Ask JFI anything...</div><div class="talk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>Talk to JFI</div></div>
+        </div>
+
+        <div class="orbLayer" id="orbLayer"></div>
+        <div class="finger" id="finger"></div>
+      </div></div>
+      <p class="caption" id="caption"></p>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="dark">
+    <h2 class="reveal">A mood for<br>every moment.</h2>
+    <p class="sub reveal">Moods blend smoothly into each other. The glow only shows up when it means something.</p>
+    <div class="moods" id="moods"></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="center"><h2 class="reveal">What's new.</h2></div>
+  <div class="feats" id="feats"></div>
+</section>
+
+<section style="padding-top:0">
+  <div class="center"><h2 class="reveal">Now and new.</h2><p class="sub reveal" style="margin-top:18px">The same face, the same colours. It just comes to life.</p></div>
+  <div class="cmp">
+    <div class="cmpc"><img src="now-chat.jpg" alt="JFI today"><div><h3>Now</h3><p>A glossy ball with two eyes. It plays short canned animations, looks around at random and doesn't react to what you do.</p></div></div>
+    <div class="cmpc"><div class="newStage" id="newStage"></div><div><h3>New</h3><p>It looks at what you tap and type, thinks with a soft aurora, and sparkles when you win. It tints to the section you're in and flies to where it's needed. Tap it.</p></div></div>
+  </div>
+</section>
+
+<footer>Mock-up only, not live yet. Sample data. JF Coach · Jamie Fitness · 26 Sep 2026</footer>
+</div>
+
+<script src="orb.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/* scroll reveals */
+const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("in")), { threshold: .2 });
+document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+/* every orb on the page looks at your cursor when you move it */
+const pageOrbs = [];
+let lastMove = 0;
+addEventListener("pointermove", (e) => { lastMove = performance.now(); pageOrbs.forEach((o) => o.lookAt(e.clientX, e.clientY, 900)); });
+
+/* ---------- hero ---------- */
+const heroStage = $("#heroStage");
+const hero = new JfiOrb(heroStage, { size: 210 });
+pageOrbs.push(hero);
+const placeHero = () => hero.placeAt(heroStage.clientWidth / 2, heroStage.clientHeight / 2);
+placeHero(); addEventListener("resize", placeHero);
+const LABEL = { idle: "Idle", happy: "Happy", curious: "Curious", thinking: "Thinking", focused: "Working", listening: "Listening", speaking: "Speaking", celebrate: "Celebrate", concerned: "Concerned", sleepy: "Sleepy", surprised: "Surprised" };
+const chips = $("#heroChips");
+JfiOrb.MOODS.forEach((m) => { const b = document.createElement("button"); b.className = "chip" + (m === "idle" ? " on" : ""); b.textContent = LABEL[m]; b.onclick = () => { chips.querySelectorAll(".chip").forEach((c) => c.classList.toggle("on", c === b)); hero.setMood(m); hero.autoLevel(m === "speaking" || m === "listening"); if (m !== "speaking" && m !== "listening") hero.setLevel(0); }; chips.appendChild(b); });
+heroStage.addEventListener("click", (e) => { const r = heroStage.getBoundingClientRect(); if (Math.hypot(e.clientX - r.left - r.width / 2, e.clientY - r.top - r.height / 2) > 130) return; const prev = hero.mood; hero.squish(); hero.setMood("celebrate"); setTimeout(() => hero.setMood(prev === "celebrate" ? "idle" : prev), 1500); });
+
+/* ---------- moods grid ---------- */
+const MDESC = { idle: "looks around", happy: "you did a thing", curious: "something new", thinking: "working it out", focused: "doing a task", listening: "hears you", speaking: "talks back", celebrate: "big wins", concerned: "pain, bad days", sleepy: "late at night", surprised: "whoa" };
+JfiOrb.MOODS.forEach((m) => {
+  const d = document.createElement("div"); d.className = "mood"; d.innerHTML = `<span>${LABEL[m]}</span><small>${MDESC[m]}</small>`; $("#moods").appendChild(d);
+  const o = new JfiOrb(d, { size: 74 }); pageOrbs.push(o);
+  requestAnimationFrame(() => o.placeAt(d.clientWidth / 2, 78)); addEventListener("resize", () => o.placeAt(d.clientWidth / 2, 78));
+  o.setMood(m); if (m === "speaking" || m === "listening") o.autoLevel(true);
+  if (m === "celebrate") setInterval(() => o.visible && o.burst(10), 2600);
+  d.onclick = () => { o.squish(); o.nod(); if (m === "celebrate") o.burst(14); };
+});
+
+/* ---------- features ---------- */
+[["curious", "Looks at what's happening", "Its eyes follow your taps, your typing, the reply arriving and the card it's helping with."],
+ ["happy", "Feels the moment", "Happy when you tick a habit, gentle when you mention pain, sleepy late at night."],
+ ["focused", "Moves with you", "It flies along a curve to wherever it's needed and peeks over the card it's working on."],
+ ["surprised", "Smoother open and close", "The chat unfolds out of the orb as it glides to the header, and folds back the same way."],
+ ["speaking", "Voice that breathes", "Soft rings breathe with your voice and its own. Its eyes lift while you talk."],
+ ["sleepy", "Quiet by default", "Effects only show at moments that matter. Reduced motion is respected and it pauses off screen."]].forEach(([m, t, p]) => {
+  const f = document.createElement("div"); f.className = "feat reveal"; f.innerHTML = `<div class="fo"></div><h3>${t}</h3><p>${p}</p>`; $("#feats").appendChild(f); io.observe(f);
+  const o = new JfiOrb(f.querySelector(".fo"), { size: 64 }); o.placeAt(32, 32); o.setMood(m); if (m === "speaking") o.autoLevel(true); pageOrbs.push(o);
+});
+
+/* now/new card */
+const ns = new JfiOrb($("#newStage"), { size: 76 }); ns.placeAt(95, 120); pageOrbs.push(ns);
+$("#newStage").onclick = () => { ns.squish(); ns.setMood("celebrate"); setTimeout(() => ns.setMood("idle"), 1400); };
+
+/* ---------- the phone demo ---------- */
+const screen = $("#screen"), layer = $("#orbLayer"), finger = $("#finger"), chat = $("#chat"), msgs = $("#msgs"), field = $("#field"), cap = $("#caption");
+const orb = new JfiOrb(layer, { size: 64 });
+const DOCK = [350, 790, 50], HEAD = [38, 82, 44], STAGE = [195, 520, 136];
+const PEACH = "#F5A524", VIOLET = "#8c7cf6", BLUE = "#4DA3FF", GREEN = "#8BD42A";
+let run = 0, paused = false, fpos = { x: 200, y: 700 };
+class Cancel extends Error {}
+const wait = async (ms, id) => { const end = performance.now() + ms; while (performance.now() < end || paused) { if (id !== run) throw new Cancel(); await sleep(40); } if (id !== run) throw new Cancel(); };
+const local = (el) => { const r = el.getBoundingClientRect(), s = screen.getBoundingClientRect(), k = s.width / 390; return { x: (r.left - s.left + r.width / 2) / k, y: (r.top - s.top + r.height / 2) / k, w: r.width / k, h: r.height / k }; };
+const toClient = (x, y) => { const s = screen.getBoundingClientRect(), k = s.width / 390; return [s.left + x * k, s.top + y * k]; };
+function fingerTo(x, y, ms = 650) { finger.classList.add("on"); finger.animate([{ transform: `translate(${fpos.x}px,${fpos.y}px)` }, { transform: `translate(${x}px,${y}px)` }], { duration: ms, easing: "cubic-bezier(.2,.7,.2,1)", fill: "forwards" }); fpos = { x, y }; }
+async function tapAt(x, y, id, look = true) { fingerTo(x, y); if (look) { const t0 = performance.now(); while (performance.now() - t0 < 650) { const [cx, cy] = toClient(fpos.x, fpos.y); orb.lookAt(cx, cy, 500); await wait(60, id); } } else await wait(650, id); finger.classList.remove("tap"); void finger.offsetWidth; finger.classList.add("tap"); await wait(260, id); }
+const hideFinger = () => finger.classList.remove("on");
+function setView(v) { $("#vHome").classList.toggle("hidden", v !== "home"); $("#vTrain").classList.toggle("hidden", v !== "train"); $("#tHome").classList.toggle("on", v === "home"); $("#tTrain").classList.toggle("on", v === "train"); }
+function setChk(id, on) { document.querySelector(id + " .chk").classList.toggle("on", on); }
+function chatOpen(on, instant) {
+  const [ox, oy] = on ? [DOCK[0], DOCK[1]] : [HEAD[0], HEAD[1]];
+  if (instant) { chat.style.transition = "none"; chat.classList.toggle("open", on); chat.style.clipPath = on ? `circle(160% at ${ox}px ${oy}px)` : `circle(0 at ${ox}px ${oy}px)`; return; }
+  chat.style.visibility = "visible";
+  const a = chat.animate(on ? [{ clipPath: `circle(0px at ${DOCK[0]}px ${DOCK[1]}px)` }, { clipPath: `circle(1000px at ${DOCK[0]}px ${DOCK[1]}px)` }] : [{ clipPath: `circle(1000px at ${DOCK[0]}px ${DOCK[1]}px)` }, { clipPath: `circle(0px at ${DOCK[0]}px ${DOCK[1]}px)` }], { duration: on ? 640 : 520, easing: on ? "cubic-bezier(.2,.7,.2,1)" : "cubic-bezier(.55,0,.35,1)", fill: "forwards" });
+  a.onfinish = () => { chat.classList.toggle("open", on); chat.style.clipPath = on ? `circle(1000px at ${DOCK[0]}px ${DOCK[1]}px)` : `circle(0px at ${DOCK[0]}px ${DOCK[1]}px)`; chat.style.visibility = on ? "visible" : "hidden"; a.cancel(); };
+  if (on) [...chat.querySelectorAll(".chead,.msgs,.comp")].forEach((el, i) => el.animate([{ opacity: 0, transform: "translateY(18px)", filter: "blur(6px)" }, { opacity: 1, transform: "none", filter: "blur(0)" }], { duration: 700, delay: 120 + i * 60, easing: "cubic-bezier(.2,.7,.2,1)", fill: "backwards" }));
+}
+function addMsg(cls, html) { const d = document.createElement("div"); d.className = cls; d.innerHTML = html; msgs.appendChild(d); return d; }
+async function type(text, id) { field.classList.add("typed"); for (let i = 1; i <= text.length; i++) { field.innerHTML = text.slice(0, i) + '<span class="caret"></span>'; const c = field.querySelector(".caret").getBoundingClientRect(); orb.lookAt(c.left, c.top + 8, 400); await wait(38 + Math.random() * 40, id); } }
+function clearField() { field.classList.remove("typed"); field.textContent = "Ask JFI anything..."; }
+async function voiceWords(text, id, speed = 170) { const v = $("#vcap"); v.innerHTML = ""; for (const w of text.split(" ")) { const s = document.createElement("span"); s.textContent = w; v.appendChild(s); await wait(speed, id); } }
+function base(view = "home", o = { chat: false }) {
+  setView(view); chatOpen(!!o.chat, true); chat.classList.remove("voiceon"); $("#vcap").innerHTML = ""; clearField(); $("#toast").classList.remove("on"); $("#homeScroll").style.transform = "";
+  if (!o.keepMsgs) msgs.innerHTML = o.chat ? '<div class="m them">Hey. Ask me anything, or tell me where you want to go.</div>' : "";
+  orb.autoLevel(false); orb.setLevel(0); orb.clearLook(); orb.setMood(o.mood || "idle"); orb.setRim(o.rim || VIOLET);
+  const p = o.at || (o.chat ? HEAD : DOCK); orb.placeAt(p[0], p[1], p[2]); hideFinger();
+}
+
+const SCENES = [
+  { t: "Rests in your tab bar", s: "Breathes, blinks and looks around.", setup: () => { base(); setChk("#habWater", false); setChk("#habMeals", false); },
+    run: async (id) => { await wait(1800, id); orb.lookAtEl($("#rings"), 1400); await wait(1500, id); orb.setMood("curious"); await wait(1100, id); orb.setMood("idle"); await wait(900, id); } },
+  { t: "Notices what you do", s: "It watches your finger and smiles when you tick a habit.", setup: () => { base(); setChk("#habWater", false); setChk("#habMeals", false); },
+    run: async (id) => { const c = local($("#habWater .chk")); await tapAt(c.x, c.y, id); setChk("#habWater", true); orb.setMood("happy"); orb.nod(); orb.burst(6); hideFinger(); await wait(1600, id); orb.setMood("idle"); await wait(600, id); } },
+  { t: "Follows the page", s: "Scroll and its eyes go with you.", setup: () => { base(); setChk("#habWater", true); setChk("#habMeals", false); },
+    run: async (id) => { fingerTo(200, 640, 400); await wait(450, id); fingerTo(200, 380, 900); orb.lookDir(0, 1, 1200); $("#homeScroll").style.transform = "translateY(-230px)"; await wait(1500, id); orb.lookDir(0, -1, 900); fingerTo(200, 560, 800); $("#homeScroll").style.transform = ""; await wait(1200, id); hideFinger(); await wait(500, id); } },
+  { t: "Opens smoother", s: "The chat unfolds out of the orb as it glides up to the header.", setup: () => { base(); setChk("#habWater", true); },
+    run: async (id) => { await tapAt(DOCK[0], DOCK[1], id, false); hideFinger(); orb.squish(); orb.setMood("surprised"); msgs.innerHTML = '<div class="m them">Hey. Ask me anything, or tell me where you want to go.</div>'; chatOpen(true); await orb.flyTo(HEAD[0], HEAD[1], HEAD[2], { ms: 640, arc: -.18 }); orb.setMood("happy"); await wait(900, id); orb.setMood("idle"); await wait(700, id); } },
+  { t: "Watches you type", s: "Its eyes follow the words as you write.", setup: () => base("home", { chat: true }),
+    run: async (id) => { await tapAt(150, 816, id, false); hideFinger(); orb.setMood("curious"); await type("What should I eat after training?", id); await wait(500, id); } },
+  { t: "Thinks with a soft aurora", s: "A slow glow circles it while it works the answer out.", setup: () => { base("home", { chat: true }); field.classList.add("typed"); field.textContent = "What should I eat after training?"; },
+    run: async (id) => { clearField(); addMsg("m me", "What should I eat after training?"); orb.setMood("thinking"); const d = addMsg("m them dots", "<i></i><i></i><i></i>"); await wait(2600, id); d.remove(); } },
+  { t: "Answers with a spark", s: "A small shimmer when the answer lands, then it looks at it with you.", setup: () => { base("home", { chat: true }); addMsg("m me", "What should I eat after training?"); },
+    run: async (id) => { const r = addMsg("m them", "Aim for 30 g of protein within the hour. Greek yoghurt with berries and oats hits it and fits your plan."); orb.setMood("happy"); orb.burst(7); orb.lookAtEl(r, 1800); await wait(900, id); addMsg("opt", "↗ Take me to today's workout"); await wait(1400, id); orb.setMood("idle"); await wait(400, id); } },
+  { t: "Moves with you", s: "Ask it to take you somewhere and it comes along, then peeks at what it's helping with.", setup: () => { base("home", { chat: true }); addMsg("m me", "What should I eat after training?"); addMsg("m them", "Aim for 30 g of protein within the hour."); addMsg("opt", "↗ Take me to today's workout"); },
+    run: async (id) => { const o = local(msgs.querySelector(".opt")); await tapAt(o.x, o.y, id); hideFinger(); orb.setMood("focused"); chatOpen(false); await orb.flyTo(DOCK[0], DOCK[1], DOCK[2], { ms: 560, arc: .15 }); setView("train"); await wait(380, id);
+      const c = local($("#woCard")); orb.setRim(PEACH); await orb.flyTo(c.x + c.w / 2 - 34, c.y - c.h / 2 + 8, 46, { ms: 700, arc: .25 }); orb.setMood("curious"); orb.lookAtEl($("#woCard"), 2000); await wait(1700, id); orb.setMood("happy"); await wait(900, id); orb.setMood("idle"); await orb.flyTo(DOCK[0], DOCK[1], DOCK[2], { ms: 700, arc: -.2 }); await wait(500, id); } },
+  { t: "Feels the moment", s: "Mention pain and it goes gentle. No sparkle, no fuss.", setup: () => { base("train", { rim: PEACH }); },
+    run: async (id) => { await tapAt(DOCK[0], DOCK[1], id, false); hideFinger(); orb.squish(); msgs.innerHTML = '<div class="m them">Hey. Ask me anything, or tell me where you want to go.</div>'; chatOpen(true); orb.setRim(VIOLET); await orb.flyTo(HEAD[0], HEAD[1], HEAD[2], { ms: 620, arc: -.18 }); await wait(300, id);
+      await type("My knee's a bit sore today", id); clearField(); addMsg("m me", "My knee's a bit sore today"); orb.setMood("concerned"); await wait(1200, id); addMsg("m them", "Sorry to hear that. Want me to tell Gabrielle and swap lunges for something kinder on your knee?"); await wait(2200, id); } },
+  { t: "Voice that breathes", s: "Hold it to talk. It moves to centre stage and breathes with both voices.", setup: () => { base("train", { chat: true }); addMsg("m them", "Sorry to hear that. Want me to tell Gabrielle and swap lunges for something kinder on your knee?"); orb.setMood("concerned"); },
+    run: async (id) => { await tapAt(HEAD[0], HEAD[1], id, false); await wait(500, id); hideFinger(); orb.setMood("surprised"); chat.classList.add("voiceon"); await orb.flyTo(STAGE[0], STAGE[1], STAGE[2], { ms: 700, arc: .2 }); orb.setMood("listening"); orb.autoLevel(true);
+      await voiceWords("Yes please, swap them for step ups.", id, 230); await wait(700, id); orb.setMood("thinking"); orb.autoLevel(false); orb.setLevel(0); await wait(1100, id); orb.setMood("speaking"); orb.autoLevel(true); await voiceWords("Done. Step ups are in, three sets of ten. I've told Gabrielle.", id, 200); await wait(600, id);
+      orb.autoLevel(false); orb.setLevel(0); orb.setMood("happy"); await tapAt(STAGE[0], STAGE[1], id, false); hideFinger(); $("#vcap").innerHTML = ""; chat.classList.remove("voiceon"); await orb.flyTo(HEAD[0], HEAD[1], HEAD[2], { ms: 640, arc: -.2 }); await wait(500, id); } },
+  { t: "Closes the same way", s: "The chat folds back into the orb as it returns to the tab bar.", setup: () => { base("train", { chat: true }); addMsg("m them", "Done. Step ups are in, three sets of ten."); },
+    run: async (id) => { await tapAt(355, 82, id); hideFinger(); chatOpen(false); orb.setMood("idle"); await orb.flyTo(DOCK[0], DOCK[1], DOCK[2], { ms: 560, arc: .18 }); await wait(1200, id); } },
+  { t: "Celebrates the wins", s: "Finish the day's habits and it throws a small party.", setup: () => { base(); setChk("#habWater", true); setChk("#habMeals", false); },
+    run: async (id) => { if (!$("#vTrain").classList.contains("hidden")) { setView("home"); orb.setRim(VIOLET); await wait(800, id); } const c = local($("#habMeals .chk")); await tapAt(c.x, c.y, id); setChk("#habMeals", true); hideFinger(); await wait(200, id); orb.lookAtEl($("#habMeals"), 700); await wait(500, id); orb.setMood("celebrate"); $("#toast").classList.add("on"); await wait(2300, id); $("#toast").classList.remove("on"); orb.setMood("happy"); await wait(900, id); orb.setMood("idle"); await wait(800, id); } },
+  { t: "Rests when you do", s: "Late at night it gets sleepy and nearly still.", setup: () => { base(); setChk("#habWater", true); setChk("#habMeals", true); },
+    run: async (id) => { orb.setMood("sleepy"); await wait(3200, id); orb.setMood("surprised"); await wait(500, id); orb.setMood("idle"); await wait(800, id); } },
+];
+const chapEl = $("#chapters");
+SCENES.forEach((s, i) => { const b = document.createElement("button"); b.className = "chap"; b.innerHTML = `<i>${i + 1}</i><div>${s.t}<small>${s.s}</small></div>`; b.onclick = () => play(i); chapEl.appendChild(b); });
+async function play(from = 0) {
+  const id = ++run;
+  try {
+    for (let i = from; ; i = (i + 1) % SCENES.length) {
+      chapEl.querySelectorAll(".chap").forEach((c, k) => c.classList.toggle("on", k === i)); cap.textContent = SCENES[i].s;
+      if (i === from || i === 0) SCENES[i].setup();
+      await SCENES[i].run(id);
+    }
+  } catch (e) { if (!(e instanceof Cancel)) console.error(e); }
+}
+$("#play").onclick = () => { paused = !paused; $("#play").textContent = paused ? "Play" : "Pause"; };
+$("#restart").onclick = () => { paused = false; $("#play").textContent = "Pause"; play(0); };
+/* start when the phone scrolls into view */
+let started = false;
+new IntersectionObserver((es) => { if (es[0].isIntersecting && !started) { started = true; play(0); } }, { threshold: .3 }).observe($("#screen"));
+if (new URLSearchParams(location.search).has("scene")) { started = true; play(+new URLSearchParams(location.search).get("scene")); }
+</script>
+</body>
+</html>
