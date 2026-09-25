@@ -46,17 +46,17 @@
   const CSS = `
 .jo{position:absolute;left:0;top:0;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);pointer-events:none;will-change:transform}
 .jo *{pointer-events:none}
-.jo-halo{position:absolute;inset:-26%;border-radius:50%;background:conic-gradient(from var(--ha,0deg),rgba(140,124,246,0) 0deg,rgba(140,124,246,.95) 70deg,rgba(124,199,247,.95) 140deg,rgba(255,154,213,.75) 190deg,rgba(140,124,246,0) 250deg,rgba(124,199,247,.6) 320deg,rgba(140,124,246,0) 360deg);-webkit-mask:radial-gradient(closest-side,transparent 64%,#000 72%,#000 80%,transparent 100%);mask:radial-gradient(closest-side,transparent 64%,#000 72%,#000 80%,transparent 100%);filter:blur(calc(var(--s)*.035));opacity:var(--halo,0)}
-.jo-glow{position:absolute;inset:-14%;border-radius:50%;background:radial-gradient(closest-side,var(--rimc,rgba(140,124,246,.55)),transparent 75%);opacity:var(--glow,.3);filter:blur(calc(var(--s)*.06))}
-.jo-ring{position:absolute;inset:-4%;border-radius:50%;border:max(1.5px,calc(var(--s)*.018)) solid rgba(140,124,246,.55);opacity:0}
-.jo-mote{position:absolute;left:50%;top:50%;width:calc(var(--s)*.055);height:calc(var(--s)*.055);margin:calc(var(--s)*-.0275);border-radius:50%;background:#fff;box-shadow:0 0 calc(var(--s)*.06) rgba(140,124,246,.9);opacity:0}
+.jo-halo{position:absolute;inset:-26%;border-radius:50%;background:conic-gradient(from var(--ha,0deg),rgba(202,234,251,0) 0deg,rgba(202,234,251,.95) 70deg,rgba(124,199,247,.95) 140deg,rgba(77,163,255,.8) 190deg,rgba(202,234,251,0) 250deg,rgba(124,199,247,.6) 320deg,rgba(202,234,251,0) 360deg);-webkit-mask:radial-gradient(closest-side,transparent 64%,#000 72%,#000 80%,transparent 100%);mask:radial-gradient(closest-side,transparent 64%,#000 72%,#000 80%,transparent 100%);filter:blur(calc(var(--s)*.035));opacity:var(--halo,0)}
+.jo-glow{position:absolute;inset:-14%;border-radius:50%;background:radial-gradient(closest-side,var(--rimc,rgba(124,199,247,.55)),transparent 75%);opacity:var(--glow,.3);filter:blur(calc(var(--s)*.06))}
+.jo-ring{position:absolute;inset:-4%;border-radius:50%;border:max(1.5px,calc(var(--s)*.018)) solid rgba(124,199,247,.6);opacity:0}
+.jo-mote{position:absolute;left:50%;top:50%;width:calc(var(--s)*.055);height:calc(var(--s)*.055);margin:calc(var(--s)*-.0275);border-radius:50%;background:#fff;box-shadow:0 0 calc(var(--s)*.06) rgba(124,199,247,.95);opacity:0}
 .jo-body{position:absolute;inset:0;border-radius:50%;overflow:hidden;
-  background:radial-gradient(circle at 34% 28%,#c9c0ff 0%,#9a8cf8 34%,#7563ee 62%,#4f5fe0 100%);
-  box-shadow:inset 0 calc(var(--s)*-.09) calc(var(--s)*.16) rgba(40,24,140,.42),inset 0 calc(var(--s)*.05) calc(var(--s)*.09) rgba(255,255,255,.45),0 0 0 max(1px,calc(var(--s)*.012)) var(--rimline,rgba(255,255,255,.0)),0 calc(var(--s)*.18) calc(var(--s)*.4) calc(var(--s)*-.2) rgba(60,44,170,.6)}
-.jo-liquid{position:absolute;inset:-30%;background:conic-gradient(from 0deg,#8c7cf6,#7cc7f7,#b7a9ff,#5d7cf2,#9ad7ff,#8c7cf6);filter:blur(calc(var(--s)*.12));opacity:.62;mix-blend-mode:soft-light}
+  background:radial-gradient(circle at 34% 28%,#f2faff 0%,#caeafb 12%,#7cc7f7 30%,#4f9fe8 58%,#2c6fd0 100%);
+  box-shadow:inset 0 calc(var(--s)*-.09) calc(var(--s)*.16) rgba(18,70,160,.42),inset 0 calc(var(--s)*.05) calc(var(--s)*.09) rgba(255,255,255,.45),0 0 0 max(1px,calc(var(--s)*.012)) var(--rimline,rgba(255,255,255,.0)),0 calc(var(--s)*.18) calc(var(--s)*.4) calc(var(--s)*-.2) rgba(36,104,196,.55)}
+.jo-liquid{position:absolute;inset:-30%;background:conic-gradient(from 0deg,#caeafb,#7cc7f7,#e6f5fe,#4f9fe8,#9ad7ff,#caeafb);filter:blur(calc(var(--s)*.12));opacity:.62;mix-blend-mode:soft-light}
 .jo-spec{position:absolute;left:18%;top:9%;width:34%;height:22%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,0));transform:rotate(-24deg);filter:blur(calc(var(--s)*.01))}
 .jo-svg{position:absolute;inset:0;overflow:visible}
-.jo-eye{fill:#fff;filter:drop-shadow(0 0 calc(var(--s)*.02) rgba(255,255,255,.55))}
+.jo-eye{fill:#fff;filter:drop-shadow(0 calc(var(--s)*.008) calc(var(--s)*.02) rgba(16,64,150,.45))}
 .jo-spark{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px}
 @media (prefers-reduced-motion:reduce){.jo-halo{display:none}}
 `;
@@ -89,7 +89,7 @@
       this.level = 0; this.levelAuto = false; this.blink = { t: -1, next: performance.now() + rnd(1500, 3500) };
       this.lookPoint = null; this.lookUntil = 0; this.nextWander = 0; this.liquidA = rnd(0, 360); this.haloA = 0; this.moteA = 0; this.t0 = performance.now();
       this.wanderScale = opts.wander ?? 1;
-      this.setRim(opts.rim || "#8c7cf6");
+      this.setRim(opts.rim || "#7cc7f7");
       this.applyPos();
       this.visible = true;
       if ("IntersectionObserver" in window) new IntersectionObserver((e) => { this.visible = e[0].isIntersecting; }).observe(this.body);
@@ -108,7 +108,7 @@
     kick(v) { this.bob.vy += v * 60; }                                   // negative = hop up
     nod() { this.kick(.05); setTimeout(() => this.kick(.05), 180); }
     squish() { this.stretch.k = -.16; this.stretch.a = Math.PI / 2; }
-    burst(n = 10, colors = ["#ffffff", "#b7a9ff", "#7cc7f7", "#ffd27a"]) {
+    burst(n = 10, colors = ["#ffffff", "#caeafb", "#7cc7f7", "#ffd27a"]) {
       if (reduced()) return;
       for (let i = 0; i < n; i++) {
         const s = document.createElement("div"); s.className = "jo-spark"; s.innerHTML = STAR; s.style.color = colors[i % colors.length];
